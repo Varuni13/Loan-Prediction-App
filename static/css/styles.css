@@ -1,0 +1,74 @@
+/* Apply some padding and center the content */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically */
+  /*height: 100vh;*/
+  width: 100%; /* Ensure body takes up full width */
+}
+
+.container {
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px;
+  width: 500px; /* Fixed width to ensure the form fits */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  text-align: left; /* Align form fields to the left */
+  display: flex;
+  flex-direction: column; /* Align inputs vertically */
+}
+
+/* Style the form */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Ensure form fields take full width */
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px 0 20px;
+  width: 100%; /* Ensures the fields fill the container */
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Style the result section */
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Make it responsive */
+@media (max-width: 600px) {
+  .container {
+    width: 90%; /* Make container responsive for smaller screens */
+  }
+}
