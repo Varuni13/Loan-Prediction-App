@@ -40,17 +40,19 @@
     <label for="bank_asset_value">Bank Asset Value:</label>
     <input type="number" id="bank_asset_value" name="bank_asset_value" required><br><br>
 
-    <label for="education">Education (1 for Graduate, 0 for Not Graduate):</label>
-    <select id="education" name="education">
-      <option value="1">Graduate</option>
-      <option value="0">Not Graduate</option>
-    </select><br><br>
+     <!-- Education Input -->
+  <label for="education">Education (1 for Graduate, 0 for Not Graduate):</label>
+  <select id="education" name="education" required>
+    <option value="1">Graduate</option>
+    <option value="0">Not Graduate</option>
+  </select><br><br>
 
-    <label for="self_employed">Self Employed (1 for Yes, 0 for No):</label>
-    <select id="self_employed" name="self_employed">
-      <option value="1">Yes</option>
-      <option value="0">No</option>
-    </select><br><br>
+  <!-- Self Employed Input -->
+  <label for="self_employed">Self Employed (1 for Yes, 0 for No):</label>
+  <select id="self_employed" name="self_employed" required>
+    <option value="1">Yes</option>
+    <option value="0">No</option>
+  </select><br><br>
 
     <button type="submit">Predict</button>
   </form>
