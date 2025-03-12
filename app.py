@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS  # Import Flask-CORS
 import pickle
 import numpy as np
+import os
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -69,5 +70,6 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 # Run the Flask app
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
