@@ -7,17 +7,22 @@ import os
 from dotenv import load_dotenv
 import os
 
+
 # Load environment variables from .env file
 load_dotenv()
 
 # Now you can access them
 model_path = os.getenv('MODEL_PATH')
 secret_key = os.getenv('SECRET_KEY')
-debug = os.getenv('DEBUG')
+debug = os.getenv('DEBUG', 'False')  # If DEBUG is not set, default to 'False'
+
+# Optional: Convert 'debug' to a boolean
+debug = debug.lower() == 'true'  # Convert to boolean (True if 'True', else False)
 
 print(f"Model path: {model_path}")
 print(f"Secret Key: {secret_key}")
 print(f"Debug mode: {debug}")
+
 
 # Initialize the Flask app
 app = Flask(__name__)
