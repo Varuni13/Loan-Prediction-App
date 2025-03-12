@@ -3,9 +3,8 @@ from flask_cors import CORS  # Import Flask-CORS
 import pickle
 import numpy as np
 import os
-
+import urllib.request
 from dotenv import load_dotenv
-import os
 
 
 # Load environment variables from .env file
@@ -23,6 +22,23 @@ print(f"Model path: {model_path}")
 print(f"Secret Key: {secret_key}")
 print(f"Debug mode: {debug}")
 
+# Function to download model and scaler from S3 URLs if running on Heroku
+def download_file_from_s3(url, filename):
+    urllib.request.urlretrieve(url, filename)
+    print(f"Downloaded {filename} from {url}")
+
+
+# Check if model_path is set to the S3 URL and download model
+if model_path:
+    download_file_from_s3(model_path, 'logistic_model.pkl')
+else:
+    print("Error: Model path is not set in environment variables.")
+
+# Check if secret_key is set to the S3 URL and download scaler
+if secret_key:
+    download_file_from_s3(secret_key, 'standard_scaler.pkl')  # Adjust this if the secret key is used for a different file
+else:
+    print("Error: Secret Key is not set in environment variables.")
 
 # Initialize the Flask app
 app = Flask(__name__)
