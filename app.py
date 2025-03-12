@@ -4,6 +4,21 @@ import pickle
 import numpy as np
 import os
 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Now you can access them
+model_path = os.getenv('MODEL_PATH')
+secret_key = os.getenv('SECRET_KEY')
+debug = os.getenv('DEBUG')
+
+print(f"Model path: {model_path}")
+print(f"Secret Key: {secret_key}")
+print(f"Debug mode: {debug}")
+
 # Initialize the Flask app
 app = Flask(__name__)
 
@@ -70,6 +85,12 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 # Run the Flask app
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+import os
 
+port = int(os.environ.get('PORT', 5000))  # Default to 5000 for local development
+app.run(host='0.0.0.0', port=port)
+
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
