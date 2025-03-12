@@ -69,35 +69,43 @@ with open('standard_scaler.pkl', 'rb') as scaler_file:
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        data = request.get_json()
-        print(f"Received data: {data}")
+        # Getting the data from the form fields
+        bank_asset_value = request.form.get('bank_asset_value', type=float)
+        education = request.form.get('education', type=int)
+        self_employed = request.form.get('self_employed', type=int)
+
+        print(f"Received values - Bank Asset Value: {bank_asset_value}, Education: {education}, Self Employed: {self_employed}")
+
+        # Validate if any required field is missing
+        if bank_asset_value is None or education is None or self_employed is None:
+            return jsonify({"error": "Missing input values."}), 400
         
-        if not data or 'features' not in data:
-            return jsonify({'error': 'Invalid input. Provide JSON with "features" key.'}), 400
+        # Create the feature array for prediction
+        features = np.array([bank_asset_value, education, self_employed]).reshape(1, -1)
+        print(f"Features for prediction: {features}")
         
-        features = np.array(data['features']).reshape(1, -1)
-        print(f"Features: {features}")
-        
+        # Scaling the features based on the scaler loaded
         features_scaled = scaler.transform(features)
+
+        # Making the prediction
         prediction = clf.predict(features_scaled)[0]
         prediction_proba = clf.predict_proba(features_scaled)[0].tolist()
-        
-        if prediction == 1:
-            loan_status = "Loan Approved"
-            explanation = "The model predicts loan approval with a high probability."
-        else:
-            loan_status = "Loan Rejected"
-            explanation = "The model predicts loan rejection with a high probability."
-        
+
+        # Return the result with loan status
+        loan_status = "Loan Approved" if prediction == 1 else "Loan Rejected"
+        explanation = "The model predicts loan approval with a high probability." if prediction == 1 else "The model predicts loan rejection with a high probability."
+
         return jsonify({
             'loan_status': loan_status,
             'prediction': int(prediction),
             'probabilities': prediction_proba,
             'explanation': explanation
         })
+        
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print(f"Error occurred: {e}")
         return jsonify({'error': str(e)}), 500
+
 
 
 # Run the Flask app
