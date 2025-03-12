@@ -23,10 +23,16 @@ print(f"Secret Key: {secret_key}")
 print(f"Debug mode: {debug}")
 
 # Function to download model and scaler from S3 URLs if running on Heroku
-def download_file_from_s3(url, filename):
-    urllib.request.urlretrieve(url, filename)
-    print(f"Downloaded {filename} from {url}")
+# Add the correct URL for the scaler
+scaler_url = 'https://loan-model-bucket.s3.eu-north-1.amazonaws.com/standard_scaler.pkl'
 
+# Function to download the model and scaler from S3 URLs
+def download_file_from_s3(url, filename):
+    try:
+        urllib.request.urlretrieve(url, filename)
+        print(f"Downloaded {filename} from {url}")
+    except Exception as e:
+        print(f"Error downloading {filename} from {url}: {e}")
 
 # Check if model_path is set to the S3 URL and download model
 if model_path:
@@ -34,11 +40,12 @@ if model_path:
 else:
     print("Error: Model path is not set in environment variables.")
 
-# Check if secret_key is set to the S3 URL and download scaler
-if secret_key:
-    download_file_from_s3(secret_key, 'standard_scaler.pkl')  # Adjust this if the secret key is used for a different file
+# Check if scaler URL is set and download scaler
+if scaler_url:
+    download_file_from_s3(scaler_url, 'standard_scaler.pkl')  # Use the correct scaler URL
 else:
-    print("Error: Secret Key is not set in environment variables.")
+    print("Error: Scaler URL is not set.")
+
 
 # Initialize the Flask app
 app = Flask(__name__)
