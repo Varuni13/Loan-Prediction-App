@@ -6,7 +6,6 @@ import os
 import urllib.request
 from dotenv import load_dotenv
 
-
 # Load environment variables from .env file
 load_dotenv()
 
@@ -46,7 +45,6 @@ if scaler_url:
 else:
     print("Error: Scaler URL is not set.")
 
-
 # Initialize the Flask app
 app = Flask(__name__)
 
@@ -69,21 +67,23 @@ with open('standard_scaler.pkl', 'rb') as scaler_file:
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Getting the data from the form fields
-        bank_asset_value = request.form.get('bank_asset_value', type=float)
-        education = request.form.get('education', type=int)
-        self_employed = request.form.get('self_employed', type=int)
+        # Getting the data from the JSON body of the request
+        data = request.get_json()
 
-        print(f"Received values - Bank Asset Value: {bank_asset_value}, Education: {education}, Self Employed: {self_employed}")
+        # Ensure the required fields are present
+        if not data or 'features' not in data:
+            return jsonify({'error': 'Missing features in request data'}), 400
 
-        # Validate if any required field is missing
-        if bank_asset_value is None or education is None or self_employed is None:
-            return jsonify({"error": "Missing input values."}), 400
+        features = data['features']
         
-        # Create the feature array for prediction
-        features = np.array([bank_asset_value, education, self_employed]).reshape(1, -1)
-        print(f"Features for prediction: {features}")
-        
+        if len(features) < 11:
+            return jsonify({'error': 'Not enough input values provided. Please provide all 11 features.'}), 400
+
+        print(f"Received features: {features}")
+
+        # Creating a numpy array for prediction
+        features = np.array(features).reshape(1, -1)
+
         # Scaling the features based on the scaler loaded
         features_scaled = scaler.transform(features)
 
@@ -101,19 +101,16 @@ def predict():
             'probabilities': prediction_proba,
             'explanation': explanation
         })
-        
+
     except Exception as e:
         print(f"Error occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
 
-
 # Run the Flask app
 import os
-
 port = int(os.environ.get('PORT', 5000))  # Default to 5000 for local development
 app.run(host='0.0.0.0', port=port)
-
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
